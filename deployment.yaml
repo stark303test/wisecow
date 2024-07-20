@@ -1,0 +1,29 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wisecow-deployment
+  labels:
+    app: wisecow
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: wisecow
+  template:
+    metadata:
+      labels:
+        app: wisecow
+    spec:
+      containers:
+      - name: wisecow
+        image: stark303/wisecow:latest
+        ports:
+        - containerPort: 4499
+        volumeMounts:
+        - name: tls-secret
+          mountPath: "/etc/tls"
+          readOnly: true
+      volumes:
+      - name: tls-secret
+        secret:
+          secretName: tls-secret
