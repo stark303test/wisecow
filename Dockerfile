@@ -1,9 +1,9 @@
 FROM ubuntu:latest
 
 # Install necessary packages
-RUN apt-get update -y && \
-    apt-get install -y fortune-mod cowsay && \
-    apt-get clean && \
+RUN apt update -y && \
+    apt install -y fortune-mod cowsay netcat-openbsd && \
+    apt clean && \
     rm -rf /var/lib/apt/lists/*
 
 # Add /usr/games to PATH
