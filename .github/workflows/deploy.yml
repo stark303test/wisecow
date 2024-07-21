@@ -33,27 +33,26 @@ jobs:
     needs: build
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Set up SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.EC2_SSH_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+        env:
+          EC2_SSH_KEY: ${{ secrets.EC2_SSH_KEY }}
 
-      - name: Install SSH Action
-        uses: appleboy/ssh-action@v0.1.2
-        with:
-          host: ${{ secrets.EC2_IP }}
-          username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.EC2_SSH_KEY }}
-          port: 22
-          script: |
-            # Update and install kubectl if not already installed
-            curl -LO "https://dl.k8s.io/release/$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
-            chmod +x ./kubectl
-            sudo mv ./kubectl /usr/local/bin/kubectl
+      - name: Test SSH connection
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_IP }} "echo 'SSH connection successful!'"
 
-            # Set up kubeconfig if not already set
+      - name: Deploy to Kubernetes
+        run: |
+          ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_IP }} << 'EOF'
             mkdir -p ~/.kube
             echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > ~/.kube/config
-
-            # Navigate to project directory and apply Kubernetes configurations
             cd /path/to/your/project
             kubectl apply -f deployment.yaml
             kubectl apply -f service.yaml
+          EOF
+        env:
+          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
