@@ -50,7 +50,7 @@ jobs:
           ssh -o StrictHostKeyChecking=no -i ~/.ssh/id_rsa ubuntu@${{ secrets.EC2_IP }} << 'EOF'
             mkdir -p ~/.kube
             echo "${{ secrets.KUBE_CONFIG_DATA }}" | base64 --decode > ~/.kube/config
-            cd /wisecow
+            cd wisecow
             kubectl apply -f deployment.yaml
             kubectl apply -f service.yaml
           EOF
