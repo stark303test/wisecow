@@ -36,19 +36,13 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up kubectl
-        uses: azure/setup-kubectl@v1
+      - name: SSH into EC2 instance and apply Kubernetes manifests
+        uses: appleboy/ssh-action@v0.1.2
         with:
-          version: 'latest'
-
-      - name: Set up kubeconfig
-        env:
-          KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
-        run: |
-          mkdir -p ~/.kube
-          echo "${KUBE_CONFIG_DATA}" | base64 --decode > ~/.kube/config
-
-      - name: Deploy to Kubernetes
-        run: |
-          kubectl apply -f deployment.yaml
-          kubectl apply -f service.yaml
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USER }}
+          key: ${{ secrets.EC2_SSH_KEY }}
+          script: |
+            cd /path/to/your/project
+            kubectl apply -f deployment.yaml
+            kubectl apply -f service.yaml
