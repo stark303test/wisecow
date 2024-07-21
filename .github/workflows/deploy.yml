@@ -52,7 +52,7 @@ jobs:
         run: |
           aws ssm send-command \
             --document-name "AWS-RunShellScript" \
-            --targets "Key=instanceids,Values=<YOUR_EC2_INSTANCE_ID>" \
+            --targets "Key=instanceids,Values=<i-0da25bd2a926e8d07>" \
             --parameters commands='
               cd /path/to/your/project
               kubectl apply -f deployment.yaml
