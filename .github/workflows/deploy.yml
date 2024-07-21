@@ -33,6 +33,9 @@ jobs:
     needs: build
 
     steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
       - name: Set up kubectl
         uses: azure/setup-kubectl@v1
         with:
@@ -42,6 +45,7 @@ jobs:
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
         run: |
+          mkdir -p ~/.kube
           echo "${KUBE_CONFIG_DATA}" | base64 --decode > ~/.kube/config
           kubectl apply -f deployment.yaml
           kubectl apply -f service.yaml
