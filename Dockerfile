@@ -19,3 +19,5 @@ RUN chmod +x wisecow.sh
 
 # Command to run the script
 CMD ["./wisecow.sh"]
+
+EXPOSE 80
