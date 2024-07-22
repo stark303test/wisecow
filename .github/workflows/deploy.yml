@@ -53,6 +53,7 @@ jobs:
             cd wisecow
             kubectl apply -f deployment.yaml
             kubectl apply -f service.yaml
+            kubectl rollout restart deployment/wisecow-deployment
           EOF
         env:
           KUBE_CONFIG_DATA: ${{ secrets.KUBE_CONFIG_DATA }}
