@@ -1,6 +1,6 @@
 FROM ubuntu:latest
 
-# Install necessary packages
+# Install necessary packages.
 RUN apt update -y && \
     apt install -y fortune-mod cowsay netcat-openbsd && \
     apt clean && \
