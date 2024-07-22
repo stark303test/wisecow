@@ -11,13 +11,13 @@ ENV PATH="/usr/games:${PATH}"
 
 WORKDIR /usr/local/bin/
 
-# Copy the script
+# Copy the scripts
 COPY wisecow.sh .
 
-# Make sure the script is executable
+# Make sure the scripts are executable
 RUN chmod +x wisecow.sh
 
-# Command to run the script
-CMD ["./wisecow.sh"]
+# Use ENTRYPOINT to run the start script
+ENTRYPOINT ["./wisecow.sh"]
 
 EXPOSE 4499
